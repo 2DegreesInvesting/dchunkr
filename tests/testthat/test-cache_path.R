@@ -1,5 +1,7 @@
 test_that("default", {
-  expect_equal(as.character(fs::path_file(cache_path())), "dchunkr")
+  expected <- as.character(fs::path_file(rappdirs::user_cache_dir("dchunkr")))
+  actual <- as.character(fs::path_file(cache_path()))
+  expect_equal(actual, expected)
 })
 
 test_that("is sensitive to `...`", {
