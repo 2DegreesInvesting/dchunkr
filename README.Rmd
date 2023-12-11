@@ -58,10 +58,14 @@ job <- data |>
   pick_undone()
 job
 
+# Here is the important function you want to run for each chunk of data
+important_stuff <- function(data) mutate(data, x2 = id * 2)
+
 job |> 
   # Select the columns that match the signature of the function passed to pmap
   select(data, file) |> 
-  future_pwalk(\(data, file) mutate(data, x2 = id * 2) |> write_csv(file))
+  # Map your important fuction to each chunk and write the result to the cache
+  future_pwalk(\(data, file) important_stuff(data) |> write_csv(file))
 
 # See cached files
 dir_tree(cache_path("demo"))

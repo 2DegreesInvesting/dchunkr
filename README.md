@@ -1,25 +1,23 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
 
 # dchunkr
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of dchunkr is to help you to work with chunks of data in parallel and
-to cache the results of each chunk. For a more complete approach see the
-[targets](https://docs.ropensci.org/targets/) package.
+The goal of dchunkr is to help you to work with chunks of data in
+parallel and to cache the results of each chunk. For a more complete
+approach see the [targets](https://docs.ropensci.org/targets/) package.
 
 ## Installation
 
-You can install the development version of dchunkr from [GitHub](https://github.com/) with:
+You can install the development version of dchunkr from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
@@ -28,8 +26,7 @@ pak::pak("2DegreesInvesting/dchunkr")
 
 ## Example
 
-
-```r
+``` r
 library(dplyr, warn.conflicts = FALSE)
 library(readr)
 library(future)
@@ -58,10 +55,14 @@ job
 #> 2     2 <tibble [1 × 1]> ~/.cache/dchunkr/demo/2.csv FALSE
 #> 3     3 <tibble [1 × 1]> ~/.cache/dchunkr/demo/3.csv FALSE
 
+# Here is the important function you want to run for each chunk of data
+important_stuff <- function(data) mutate(data, x2 = id * 2)
+
 job |> 
   # Select the columns that match the signature of the function passed to pmap
   select(data, file) |> 
-  future_pwalk(\(data, file) mutate(data, x2 = id * 2) |> write_csv(file))
+  # Map your important fuction to each chunk and write the result to the cache
+  future_pwalk(\(data, file) important_stuff(data) |> write_csv(file))
 
 # See cached files
 dir_tree(cache_path("demo"))
@@ -73,7 +74,7 @@ dir_tree(cache_path("demo"))
 # Read all cached files at once
 read_csv(dir_ls(cache_path("demo")))
 #> Rows: 5 Columns: 2
-#> ── Column specification ────────────────────────────────────────────────────────────────
+#> ── Column specification ────────────────────────────────────────────────────────
 #> Delimiter: ","
 #> dbl (2): id, x2
 #> 
@@ -91,8 +92,3 @@ read_csv(dir_ls(cache_path("demo")))
 # Cleanup before the next run
 cache_path("demo") |> dir_delete()
 ```
-
-
-
-
-
