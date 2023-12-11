@@ -4,20 +4,26 @@
 \name{dchunkr-package}
 \alias{dchunkr}
 \alias{dchunkr-package}
-\title{dchunkr: What the Package Does (One Line, Title Case)}
+\title{dchunkr: Work with Chunks of Data}
 \description{
-What the package does (one paragraph).
+Helps to work with chunks of data in parallel and to cache the results of each chunk. It's basic approach to handling somewhat large datasets and long runtimes.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/2DegreesInvesting/dchunkr}
+  \item \url{https://2degreesinvesting.github.io/dchunkr/}
   \item Report bugs at \url{https://github.com/2DegreesInvesting/dchunkr/issues}
 }
 
 }
 \author{
 \strong{Maintainer}: Mauro Lepore \email{maurolepore@gmail.com} (\href{https://orcid.org/0000-0002-1986-7988}{ORCID})
+
+Other contributors:
+\itemize{
+  \item 2 Degrees Investing Initiative \email{contact@2degrees-investing.org} [copyright holder, funder]
+}
 
 }
 \keyword{internal}

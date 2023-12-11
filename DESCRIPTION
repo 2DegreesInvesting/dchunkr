@@ -1,15 +1,17 @@
 Package: dchunkr
-Title: What the Package Does (One Line, Title Case)
+Title: Work with Chunks of Data
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R: c(
     person("Mauro", "Lepore", , "maurolepore@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "https://orcid.org/0000-0002-1986-7988"))
-Description: What the package does (one paragraph).
+           comment = c(ORCID = "https://orcid.org/0000-0002-1986-7988")),
+    person("2 Degrees Investing Initiative", , , "contact@2degrees-investing.org", role = c("cph", "fnd"))
+  )
+Description: Helps to work with chunks of data in parallel and to cache
+    the results of each chunk. It's basic approach to handling somewhat
+    large datasets and long runtimes.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
-URL: https://github.com/2DegreesInvesting/dchunkr, https://2degreesinvesting.github.io/dchunkr/
+URL: https://github.com/2DegreesInvesting/dchunkr,
+    https://2degreesinvesting.github.io/dchunkr/
 BugReports: https://github.com/2DegreesInvesting/dchunkr/issues
 Imports: 
     dplyr,
@@ -25,3 +27,6 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
