@@ -1,22 +1,22 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
 
 # dchunkr
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of dchunkr is to help you work with chunks of data.
+The goal of dchunkr is to help you to work with chunks of data in
+parallel and to cache the results of each chunk. For a more complete
+approach see the [targets](https://docs.ropensci.org/targets/) package.
 
 ## Installation
 
-You can install the development version of dchunkr from [GitHub](https://github.com/) with:
+You can install the development version of dchunkr from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
@@ -25,36 +25,65 @@ pak::pak("2DegreesInvesting/dchunkr")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-
-```r
+``` r
+library(dplyr, warn.conflicts = FALSE)
+library(readr)
+library(future)
+library(furrr)
+library(purrr)
+library(fs)
 library(dchunkr)
-#> Error in library(dchunkr): there is no package called 'dchunkr'
-## basic example code
+
+# Enable computing over multiple workers in parallel
+plan(multisession)
+
+data <- tibble(id = c(1, 1, 1, 2, 3))
+
+job <- data |> 
+  # Each chunk can run parallel to other chunks
+  nest_chunk(.by = "id", chunks = 3) |> 
+  # Set where to cache the result of each chunk
+  add_file(parent = cache_path("demo"), ext = ".csv") |> 
+  # Don't recompute what's already cached, so you can resume after interruptions
+  pick_undone()
+job
+#> # A tibble: 3 × 4
+#>   chunk data             file                        done 
+#>   <int> <list>           <fs::path>                  <lgl>
+#> 1     1 <tibble [3 × 1]> ~/.cache/dchunkr/demo/1.csv FALSE
+#> 2     2 <tibble [1 × 1]> ~/.cache/dchunkr/demo/2.csv FALSE
+#> 3     3 <tibble [1 × 1]> ~/.cache/dchunkr/demo/3.csv FALSE
+
+job |> 
+  # Select the columns that match the signature of the function passed to pmap
+  select(data, file) |> 
+  future_pwalk(\(data, file) mutate(data, x2 = id * 2) |> write_csv(file))
+
+# See cached files
+dir_tree(cache_path("demo"))
+#> ~/.cache/dchunkr/demo
+#> ├── 1.csv
+#> ├── 2.csv
+#> └── 3.csv
+
+# Read all cached files at once
+read_csv(dir_ls(cache_path("demo")))
+#> Rows: 5 Columns: 2
+#> ── Column specification ────────────────────────────────────────────────────────
+#> Delimiter: ","
+#> dbl (2): id, x2
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+#> # A tibble: 5 × 2
+#>      id    x2
+#>   <dbl> <dbl>
+#> 1     1     2
+#> 2     1     2
+#> 3     1     2
+#> 4     2     4
+#> 5     3     6
+
+# Cleanup before the next run
+cache_path("demo") |> dir_delete()
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-
-```r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<div class="figure">
-<img src="man/figures/README-pressure-1.png" alt="plot of chunk pressure" width="100%" />
-<p class="caption">plot of chunk pressure</p>
-</div>
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
