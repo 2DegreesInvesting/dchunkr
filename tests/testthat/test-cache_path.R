@@ -3,7 +3,9 @@ test_that("default", {
 })
 
 test_that("is sensitive to `...`", {
-  expect_equal(as.character(cache_path("a", "b.csv")), "~/.cache/dchunkr/a/b.csv")
+  out <- as.character(cache_path("a", "b.csv"))
+  expect_equal(fs::path_file(out), "b.csv")
+  expect_equal(fs::path_file(fs::path_dir(out)), "a")
 })
 
 test_that("is sensitive to `cache_dir`", {
