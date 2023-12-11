@@ -1,5 +1,5 @@
 test_that("default", {
-  expect_equal(as.character(cache_path()), "~/.cache/dchunkr")
+  expect_equal(as.character(fs::path_file(cache_path())), "dchunkr")
 })
 
 test_that("is sensitive to `...`", {
