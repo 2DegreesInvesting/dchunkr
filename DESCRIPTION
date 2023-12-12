@@ -10,9 +10,8 @@ Description: Helps to work with chunks of data in parallel and to cache
     the results of each chunk. It's basic approach to handling somewhat
     large datasets and long runtimes.
 License: MIT + file LICENSE
-URL: https://github.com/2DegreesInvesting/dchunkr,
-    https://2degreesinvesting.github.io/dchunkr/
-BugReports: https://github.com/2DegreesInvesting/dchunkr/issues
+URL: https://github.com/2DegreesInvesting/dchunkr, https://2degreesinvesting.github.io/dchunkr/, https://github.com/maurolepore/dchunkr
+BugReports: https://github.com/maurolepore/dchunkr/issues
 Imports: 
     dplyr,
     fs,
