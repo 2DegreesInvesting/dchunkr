@@ -91,11 +91,11 @@
 <span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">job</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">job</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Each chunk can run parallel to other chunks</span></span>
-<span>  <span class="fu"><a href="reference/nest_chunk.html">nest_chunk</a></span><span class="op">(</span>.by <span class="op">=</span> <span class="st">"id"</span>, chunks <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/nest_chunk.html">nest_chunk</a></span><span class="op">(</span>.by <span class="op">=</span> <span class="st">"id"</span>, chunks <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Set where to cache the result of each chunk</span></span>
-<span>  <span class="fu"><a href="reference/add_file.html">add_file</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="reference/cache_path.html">cache_path</a></span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span>, ext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/add_file.html">add_file</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="reference/cache_path.html">cache_path</a></span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span>, ext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Don't recompute what's already cached, so you can resume after interruptions</span></span>
 <span>  <span class="fu"><a href="reference/pick_undone.html">pick_undone</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">job</span></span>
@@ -109,9 +109,9 @@
 <span><span class="co"># Here is the important function you want to run for each chunk of data</span></span>
 <span><span class="va">important</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, x2 <span class="op">=</span> <span class="va">id</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">job</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">job</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Select the columns that match the signature of the function passed to pmap</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Map your important fuction to each chunk and write the result to the cache</span></span>
 <span>  <span class="fu"><a href="https://furrr.futureverse.org/reference/future_map2.html" class="external-link">future_pwalk</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">data</span>, <span class="va">file</span><span class="op">)</span> <span class="fu">important</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">write_csv</span><span class="op">(</span><span class="va">file</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
