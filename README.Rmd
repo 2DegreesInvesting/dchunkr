@@ -52,11 +52,11 @@ plan(multisession)
 
 data <- tibble(id = c(1, 1, 1, 2, 3))
 
-job <- data |> 
+job <- data |>
   # Each chunk can run parallel to other chunks
-  nest_chunk(.by = "id", chunks = 3) |> 
+  nest_chunk(.by = "id", chunks = 3) |>
   # Set where to cache the result of each chunk
-  add_file(parent = cache_path("demo"), ext = ".csv") |> 
+  add_file(parent = cache_path("demo"), ext = ".csv") |>
   # Don't recompute what's already cached, so you can resume after interruptions
   pick_undone()
 job
@@ -64,9 +64,9 @@ job
 # Here is the important function you want to run for each chunk of data
 important <- function(data) mutate(data, x2 = id * 2)
 
-job |> 
+job |>
   # Select the columns that match the signature of the function passed to pmap
-  select(data, file) |> 
+  select(data, file) |>
   # Map your important fuction to each chunk and write the result to the cache
   future_pwalk(\(data, file) important(data) |> write_csv(file))
 
