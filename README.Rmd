@@ -20,9 +20,12 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of dchunkr is help you to work with chunks of data in parallel and to
-cache the results of each chunk. It's extremely basic approach to handling
-somewhat large datasets and long runtimes. For a more complete approach see the
+The goal of dchunkr is provide basic tools for computing on data bigger than you
+can fit in memory. Use it to chunks your data, to run multiple chunks in
+parallel, and to cache the result of each chunk. This allows you to use your
+computer resources more efficiently, and to resume after interruptions. It's
+designed to be a minimal and to play well with the tidyverse and friends. For a
+mature, complete alternative see the wonderful
 [targets](https://docs.ropensci.org/targets/) package.
 
 ## Installation
