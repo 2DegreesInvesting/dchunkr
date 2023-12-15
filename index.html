@@ -86,6 +86,12 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fs.r-lib.org" class="external-link">fs</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/2DegreesInvesting/dchunkr" class="external-link">dchunkr</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># You may complete the job faster if multiple computers run the same code and</span></span>
+<span><span class="co"># feed the same cache but work in different, random chunks of data.</span></span>
+<span><span class="va">shuffle</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">data</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Enable computing over multiple workers in parallel</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
 <span></span>
@@ -110,6 +116,7 @@
 <span><span class="va">important</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, x2 <span class="op">=</span> <span class="va">id</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">job</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">shuffle</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="co"># Select the columns that match the signature of the function passed to pmap</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Map your important fuction to each chunk and write the result to the cache</span></span>
@@ -125,7 +132,7 @@
 <span><span class="co"># Read all cached files at once</span></span>
 <span><span class="fu">read_csv</span><span class="op">(</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="fu"><a href="reference/cache_path.html">cache_path</a></span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 5 Columns: 2</span></span>
-<span><span class="co">#&gt; ── Column specification ──────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; ── Column specification ────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; Delimiter: ","</span></span>
 <span><span class="co">#&gt; dbl (2): id, x2</span></span>
 <span><span class="co">#&gt; </span></span>
