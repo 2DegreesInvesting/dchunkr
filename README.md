@@ -1,15 +1,12 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
 
 # dchunkr
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/2DegreesInvesting/dchunkr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -17,13 +14,14 @@ The goal of dchunkr is provide basic tools for computing on data bigger
 than you can fit in memory. Use it to chunk your data, run multiple
 chunks in parallel, and cache the result of each chunk. This allows you
 to use your computer resources more efficiently, and to resume after
-interruptions. It's designed to be a minimal and to play well with the
-tidyverse and friends. For a mature, complete alternative see the wonderful
-[targets](https://docs.ropensci.org/targets/) package.
+interruptions. It’s designed to be a minimal and to play well with the
+tidyverse and friends. For a mature, complete alternative see the
+wonderful [targets](https://docs.ropensci.org/targets/) package.
 
 ## Installation
 
-You can install the development version of dchunkr from [GitHub](https://github.com/) with:
+You can install the development version of dchunkr from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
@@ -32,14 +30,19 @@ pak::pak("2DegreesInvesting/dchunkr")
 
 ## Example
 
-
-```r
+``` r
 library(dplyr, warn.conflicts = FALSE)
 library(readr)
 library(future)
 library(furrr)
 library(fs)
 library(dchunkr)
+
+set.seed(123)
+
+# You may complete the job faster if multiple computers run the same code and
+# feed the same cache but work in different, random chunks of data.
+shuffle <- function(data) slice_sample(data, n = nrow(data))
 
 # Enable computing over multiple workers in parallel
 plan(multisession)
@@ -65,6 +68,7 @@ job
 important <- function(data) mutate(data, x2 = id * 2)
 
 job |>
+  shuffle() |> 
   # Select the columns that match the signature of the function passed to pmap
   select(data, file) |>
   # Map your important fuction to each chunk and write the result to the cache
@@ -80,7 +84,7 @@ dir_tree(cache_path("demo"))
 # Read all cached files at once
 read_csv(dir_ls(cache_path("demo")))
 #> Rows: 5 Columns: 2
-#> ── Column specification ──────────────────────────────────────────────────────────
+#> ── Column specification ────────────────────────────────────────────────────────
 #> Delimiter: ","
 #> dbl (2): id, x2
 #> 
