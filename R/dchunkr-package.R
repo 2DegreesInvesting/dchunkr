@@ -11,6 +11,7 @@
 #' @importFrom fs file_exists
 #' @importFrom fs path
 #' @importFrom furrr future_pwalk
+#' @importFrom rlang arg_match
 #' @importFrom tibble tibble
 #' @importFrom tidyr nest
 #' @importFrom tidyr unnest

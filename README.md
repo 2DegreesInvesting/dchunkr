@@ -40,10 +40,6 @@ library(dchunkr)
 
 set.seed(123)
 
-# You may complete the job faster if multiple computers run the same code and
-# feed the same cache but work in different, random chunks of data.
-shuffle <- function(data) slice_sample(data, n = nrow(data))
-
 # Enable computing over multiple workers in parallel
 plan(multisession)
 
@@ -55,20 +51,23 @@ job <- data |>
   # Set where to cache the result of each chunk
   add_file(parent = cache_path("demo"), ext = ".csv") |>
   # Don't recompute what's already cached, so you can resume after interruptions
-  pick_undone()
+  pick_undone() |>
+  # You may complete the job twice faster if two computers run the same code and
+  # feed the same cache but work through chunks in reverse order, or even faster
+  # if multiple computers work through chunks in random order.
+  order_rows("sample")
 job
 #> # A tibble: 3 × 4
 #>   chunk data             file                        done 
 #>   <int> <list>           <fs::path>                  <lgl>
-#> 1     1 <tibble [3 × 1]> ~/.cache/dchunkr/demo/1.csv FALSE
-#> 2     2 <tibble [1 × 1]> ~/.cache/dchunkr/demo/2.csv FALSE
-#> 3     3 <tibble [1 × 1]> ~/.cache/dchunkr/demo/3.csv FALSE
+#> 1     3 <tibble [1 × 1]> ~/.cache/dchunkr/demo/3.csv FALSE
+#> 2     1 <tibble [3 × 1]> ~/.cache/dchunkr/demo/1.csv FALSE
+#> 3     2 <tibble [1 × 1]> ~/.cache/dchunkr/demo/2.csv FALSE
 
 # Here is the important function you want to run for each chunk of data
 important <- function(data) mutate(data, x2 = id * 2)
 
 job |>
-  shuffle() |> 
   # Select the columns that match the signature of the function passed to pmap
   select(data, file) |>
   # Map your important fuction to each chunk and write the result to the cache
