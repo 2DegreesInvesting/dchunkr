@@ -13,7 +13,9 @@ Useful links:
 \itemize{
   \item \url{https://github.com/2DegreesInvesting/dchunkr}
   \item \url{https://2degreesinvesting.github.io/dchunkr/}
-  \item Report bugs at \url{https://github.com/2DegreesInvesting/dchunkr/issues}
+  \item \url{https://github.com/maurolepore/dchunkr}
+  \item \url{https://maurolepore.github.io/dchunkr/}
+  \item Report bugs at \url{https://github.com/maurolepore/dchunkr/issues}
 }
 
 }

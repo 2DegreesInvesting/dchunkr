@@ -3,6 +3,7 @@
 export(add_file)
 export(cache_path)
 export(nest_chunk)
+export(order_rows)
 export(pick_undone)
 importFrom(dplyr,.data)
 importFrom(dplyr,filter)
