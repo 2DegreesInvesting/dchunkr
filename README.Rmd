@@ -60,7 +60,7 @@ job <- data |>
   # Set where to cache the result of each chunk
   add_file(parent = cache_path("demo"), ext = ".csv") |>
   # Don't recompute what's already cached, so you can resume after interruptions
-  pick_undone() |> 
+  pick_undone() |>
   # You may complete the job twice faster if two computers run the same code and
   # feed the same cache but work through chunks in reverse order, or even faster
   # if multiple computers work through chunks in random order.
