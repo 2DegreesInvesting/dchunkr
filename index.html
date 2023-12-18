@@ -88,10 +88,6 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># You may complete the job faster if multiple computers run the same code and</span></span>
-<span><span class="co"># feed the same cache but work in different, random chunks of data.</span></span>
-<span><span class="va">shuffle</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">data</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Enable computing over multiple workers in parallel</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
 <span></span>
@@ -103,20 +99,23 @@
 <span>  <span class="co"># Set where to cache the result of each chunk</span></span>
 <span>  <span class="fu"><a href="reference/add_file.html">add_file</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="reference/cache_path.html">cache_path</a></span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span>, ext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Don't recompute what's already cached, so you can resume after interruptions</span></span>
-<span>  <span class="fu"><a href="reference/pick_undone.html">pick_undone</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="reference/pick_undone.html">pick_undone</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="co"># You may complete the job twice faster if two computers run the same code and</span></span>
+<span>  <span class="co"># feed the same cache but work through chunks in reverse order, or even faster</span></span>
+<span>  <span class="co"># if multiple computers work through chunks in random order.</span></span>
+<span>  <span class="fu"><a href="reference/order_rows.html">order_rows</a></span><span class="op">(</span><span class="st">"sample"</span><span class="op">)</span></span>
 <span><span class="va">job</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 4</span></span>
 <span><span class="co">#&gt;   chunk data             file                        done </span></span>
 <span><span class="co">#&gt;   &lt;int&gt; &lt;list&gt;           &lt;fs::path&gt;                  &lt;lgl&gt;</span></span>
-<span><span class="co">#&gt; 1     1 &lt;tibble [3 × 1]&gt; ~/.cache/dchunkr/demo/1.csv FALSE</span></span>
-<span><span class="co">#&gt; 2     2 &lt;tibble [1 × 1]&gt; ~/.cache/dchunkr/demo/2.csv FALSE</span></span>
-<span><span class="co">#&gt; 3     3 &lt;tibble [1 × 1]&gt; ~/.cache/dchunkr/demo/3.csv FALSE</span></span>
+<span><span class="co">#&gt; 1     3 &lt;tibble [1 × 1]&gt; ~/.cache/dchunkr/demo/3.csv FALSE</span></span>
+<span><span class="co">#&gt; 2     1 &lt;tibble [3 × 1]&gt; ~/.cache/dchunkr/demo/1.csv FALSE</span></span>
+<span><span class="co">#&gt; 3     2 &lt;tibble [1 × 1]&gt; ~/.cache/dchunkr/demo/2.csv FALSE</span></span>
 <span></span>
 <span><span class="co"># Here is the important function you want to run for each chunk of data</span></span>
 <span><span class="va">important</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, x2 <span class="op">=</span> <span class="va">id</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">job</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">shuffle</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="co"># Select the columns that match the signature of the function passed to pmap</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Map your important fuction to each chunk and write the result to the cache</span></span>
