@@ -17,6 +17,7 @@ Imports:
     fs,
     furrr,
     rappdirs,
+    rlang,
     tibble,
     tidyr,
     tidyselect,
